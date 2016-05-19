@@ -1,16 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-function start {
-  pushd $1
-  redis-server config &
-  popd
-}
-
-
-redis-sentinel sentinel.conf &
+source func.sh
 
 for i in $(seq 1 3); do
-  start redis$i
+  startredis redis$i
 done
 
-./endless.sh
+redis-sentinel sentinel.conf > /dev/null &
+
+killmaster
